@@ -1,4 +1,4 @@
-# herdr-app-tmux-prefix
+# herdr-tmux-prefix
 
 Tmux-style prefix shortcuts with a status indicator for Herdr app.
 
@@ -26,8 +26,8 @@ The app must support frameless overlays (`frame: "none"`). This was validated
 with Herdr app 0.1.16. No additional runtime dependencies are needed.
 
 ```sh
-git clone https://github.com/Gwynbleid85/herdr-app-tmux-prefix.git
-cd herdr-app-tmux-prefix
+git clone https://github.com/Gwynbleid85/herdr-tmux-prefix.git
+cd herdr-tmux-prefix
 
 # Stop if this folder already exists; back it up before upgrading.
 test ! -e ~/.config/herdr-app/mods/tmux-prefix && \
