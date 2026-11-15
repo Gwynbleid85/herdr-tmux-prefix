@@ -1,4 +1,6 @@
-# Tmux prefix with a status indicator for Herdr
+# herdr-app-tmux-prefix
+
+Tmux-style prefix shortcuts with a status indicator for Herdr app.
 
 Press **Ctrl+B**, release it, then press a command key. Prefix mode waits
 with only a small **`[prefix]`** indicator aligned with the footer at the
@@ -11,8 +13,9 @@ the table while keeping the indicator and prefix mode active; Escape cancels.
 Clicking outside the help table also cancels prefix mode.
 
 Based on [Herdr's tmux-prefix example](https://github.com/herdrdev/herdr-layout-examples/tree/main/tmux-prefix),
-licensed under [Apache-2.0](../LICENSE). This fork changes hint visibility;
-it is not an official Herdr release or a terminal multiplexer. The transparent
+licensed under [Apache-2.0](LICENSE). This standalone adaptation changes hint
+visibility and preserves the original mod's relevant Git history.
+It is not an official Herdr release or a terminal multiplexer. The transparent
 prefix overlay sizes itself from the current window viewport, rather than from
 a fixed screen resolution.
 
@@ -23,13 +26,13 @@ The app must support frameless overlays (`frame: "none"`). This was validated
 with Herdr app 0.1.16. No additional runtime dependencies are needed.
 
 ```sh
-git clone https://github.com/Gwynbleid85/herdr-app-layout-examples.git
-cd herdr-app-layout-examples
+git clone https://github.com/Gwynbleid85/herdr-app-tmux-prefix.git
+cd herdr-app-tmux-prefix
 
 # Stop if this folder already exists; back it up before upgrading.
 test ! -e ~/.config/herdr-app/mods/tmux-prefix && \
   mkdir -p ~/.config/herdr-app/mods && \
-  cp -R tmux-prefix/mods/tmux-prefix ~/.config/herdr-app/mods/
+  cp -R mods/tmux-prefix ~/.config/herdr-app/mods/
 
 # Back up shortcuts before editing.
 cp ~/.config/herdr-app/keys.json \
@@ -94,7 +97,7 @@ no network requests and reads no external files. Customize `BINDINGS` and
 
 Before upgrading, copy the installed `mods/tmux-prefix` folder to a dated
 backup outside `mods/`, then replace only `main.js` and `mod.json` with the
-fork's files. Keep your existing `keys.json` and validate again.
+repository's files. Keep your existing `keys.json` and validate again.
 
 To uninstall, close prefix mode, remove its three key entries (or restore
 your prior Ctrl+B bindings), and remove `mods/tmux-prefix`. Restore your
@@ -106,8 +109,8 @@ keys backup only if you have made no later shortcut edits.
 From the repository root, using Node's built-in test runner:
 
 ```sh
-node --test tmux-prefix/tests/prefix.test.cjs
-herdr-app check "$PWD/tmux-prefix/mods/tmux-prefix"
+node --test tests/prefix.test.cjs
+herdr-app check "$PWD/mods/tmux-prefix"
 ```
 
 Unit tests execute the real mod with native Herdr/GPUI boundaries stubbed.
