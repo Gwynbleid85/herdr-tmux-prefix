@@ -110,14 +110,15 @@ export default class TmuxPrefix extends View {
     // A transparent window-sized popup anchors the status to the window corner.
     // Closing the popup removes the indicator together with prefix mode.
     const viewport = window.viewport_size();
-    const root = v_flex().id("tmux-prefix").relative()
+    // Herdr insets top popups by 8px; undo that so footer coordinates
+    // refer to the actual window edges rather than the popup's origin.
+    const root = v_flex().id("tmux-prefix").relative().left(-8).top(-8)
       .w(viewport.width).h(viewport.height).items_center()
       .track_focus(this.handle)
       .on_key_down((e, cx) => this.key(e, cx))
       .on_mouse_down("left", () => this.dismiss())
-      .child(div().absolute().right(12).bottom(12)
-        .px(8).py(4).rounded(4).bg(t.popover).text_color(t.accent)
-        .text_size(12).child("[prefix]"));
+      .child(h_flex().absolute().right(14).bottom(0).h(28).items_center()
+        .text_color(t.muted).text_size(11.8).child("[prefix]"));
     if (!this.all) return root;
     const rows = BINDINGS;
     const help = v_flex().mt(64).w(520).max_w_full().h(420)

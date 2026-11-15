@@ -1,8 +1,10 @@
 # Tmux prefix with a status indicator for Herdr
 
 Press **Ctrl+B**, release it, then press a command key. Prefix mode waits
-with only a small **`[prefix]`** indicator in the bottom-right corner of the
-Herdr window. The indicator stays visible during repeats and help, and disappears
+with only a small **`[prefix]`** indicator aligned with the footer at the
+bottom-right of the Herdr window. It uses muted gray text with no background,
+border, or badge padding, centered in a 28px footer-height row with a 14px
+right inset. The indicator stays visible during repeats and help, and disappears
 when prefix mode ends. There is no automatic hint table or full-window background.
 Press **Ctrl+B, then ?** to show the full help table. Press `?` again to hide
 the table while keeping the indicator and prefix mode active; Escape cancels.

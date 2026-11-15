@@ -8,7 +8,7 @@ This file is the brief: enough to build Tmux prefix from an empty folder. The fi
 
 ## What you see
 
-- After Ctrl+B, only `[prefix]` is visible, 12px from the right and bottom of the Herdr window. It uses 12px accent text, popup background, 8px horizontal and 4px vertical padding, and 4px rounded corners. A transparent, frameless, viewport-sized root captures the next key. Read `window.viewport_size()` during render and set explicit root width/height; percentage sizing alone collapses in this popup host.
+- After Ctrl+B, only `[prefix]` is visible at the right of the footer bar. It uses 11.8px muted gray text, no background, border, padding or rounded badge. Center it vertically in a 28px-high row at bottom 0, inset 14px from the right to match footer spacing. A transparent, frameless, viewport-sized root captures the next key. Read `window.viewport_size()` during render and set explicit root width/height; percentage sizing alone collapses in this popup host.
 - After ?, a popup near the top of your window, 520px wide and 420px high, offset 64px from the top. Nothing is added to the layout itself.
 - A heading, "Ctrl+B · waiting for a key", with "Esc cancel · ^B send prefix" on the right. After a repeatable action the heading becomes "Repeat · 500 ms".
 - A scrollable full list, 280px high, with the key on the left, its action in the middle and "repeat" on the right for actions you can repeat. `?` toggles the table's visibility, including arrows and digits.
