@@ -1,22 +1,23 @@
 # Tmux prefix
 
-Ctrl+B, then a key: tmux-style shortcuts for Herdr tabs, panes and spaces. A small hint stays open while you decide. This is a piece you add to your current layout, not a whole window or a terminal multiplexer.
+Ctrl+B, then a key: tmux-style shortcuts for Herdr tabs, panes and spaces. Prefix mode waits silently; press ? to show the full help table. This is a piece you add to your current layout, not a whole window or a terminal multiplexer.
 
-![Tmux prefix hint](preview.png)
+![On-demand tmux prefix help (Ctrl+B, then ?)](preview.png)
 
 This file is the brief: enough to build Tmux prefix from an empty folder. The files next to it are one build of it. If they don't work on your Herdr, or you want it different, build it again from here.
 
 ## What you see
 
-- A popup near the top of your window, 520px wide and 420px high, offset 64px from the top. Nothing is added to the layout itself.
+- Nothing visible after Ctrl+B: an empty focusable view in a frameless popup captures the next key.
+- After ?, a popup near the top of your window, 520px wide and 420px high, offset 64px from the top. Nothing is added to the layout itself.
 - A heading, "Ctrl+B · waiting for a key", with "Esc cancel · ^B send prefix" on the right. After a repeatable action the heading becomes "Repeat · 500 ms".
-- A scrollable list, 280px high, with the key on the left, its action in the middle and "repeat" on the right for actions you can repeat. The short list hides arrows and digits; `?` toggles the full list.
-- A footer: "0–9 tabs (0 = 10) · arrows focus · ? all bindings".
+- A scrollable full list, 280px high, with the key on the left, its action in the middle and "repeat" on the right for actions you can repeat. `?` toggles the table's visibility, including arrows and digits.
+- A footer: "0–9 tabs (0 = 10) · arrows focus · ? hide help".
 - Your theme's popup background, foreground text, accent keys and muted hints. Text is 12px; the heading is semibold, with 14px padding around the popup and 8px gaps.
 
 ## How it behaves
 
-Ctrl+B opens the hint and waits without a timeout. The next key does this:
+Ctrl+B waits silently without a timeout; ? reveals the full hint table. The next key does this:
 
 | Key | Action |
 | --- | --- |
@@ -29,7 +30,7 @@ Ctrl+B opens the hint and waits without a timeout. The next key does this:
 | `J` / `K` | Next / previous space; repeatable |
 | `z` | Toggle pane zoom |
 | `d` | Minimize the window, leaving programs running |
-| `?` | Toggle the full binding list and wait without a timeout |
+| `?` | Show/hide the full binding list and wait without a timeout |
 | Escape | Cancel |
 | Ctrl+B | Send a literal Ctrl+B to the focused terminal |
 
@@ -39,7 +40,7 @@ An unbound key after the initial prefix just closes the hint. During the repeat 
 
 ## Built from
 
-- **One mod**, `mods/tmux-prefix/`, with `main.js` and `mod.json`. The manifest has `place: "none"` and a top popup overlay, so there is no `layouts/` folder or layout change.
+- **One mod**, `mods/tmux-prefix/`, with `main.js` and `mod.json`. The manifest has `place: "none"` and a top popup overlay with `frame: "none"`, so there is no `layouts/` folder or layout change. Render an empty focusable root until help is requested; only help mode draws its own background and table.
 - **A `keys.json` snippet** with three bindings, merged into the person's existing keys rather than replacing them:
 
   ```json
@@ -68,9 +69,9 @@ An unbound key after the initial prefix just closes the hint. During the repeat 
 ## Done when
 
 - `herdr-app check mods/tmux-prefix` passes with the matching Herdr binary and home.
-- In an isolated home, Ctrl+B opens the hint and a long pause does not close it.
+- In Herdr, Ctrl+B waits with no visible content, host background, border or shadow, and a long pause does not end prefix mode.
 - New tab, both splits, tab selection, pane focus, zoom and minimize do what their labels say.
 - J J K repeats move two spaces forward and one back; the hint closes 500ms after the last repeat.
-- `?` toggles the full list and stops the repeat timeout. Escape cancels without typing into the terminal.
+- `?` reveals the full list, a second `?` hides it, and either stops the repeat timeout. Escape cancels without typing into the terminal.
 - Ctrl+B Ctrl+B sends a literal prefix. An unbound simple key during repeats reaches the focused terminal, while one after the initial prefix only dismisses the hint.
 - Normal typing and the person's existing layout still work outside the popup.

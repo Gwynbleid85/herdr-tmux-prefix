@@ -107,15 +107,17 @@ export default class TmuxPrefix extends View {
 
   render() {
     const t = theme();
-    const rows = this.all ? BINDINGS : BINDINGS.filter(([key]) => !["left", "right", "up", "down"].includes(key) && !/^\d$/.test(key));
-    return v_flex().id("tmux-prefix").track_focus(this.handle)
-      .on_key_down((e, cx) => this.key(e, cx))
-      .p(14).gap(8).bg(t.popover).text_color(t.foreground).text_size(12)
+    // Keep keyboard focus while waiting, without drawing a hint or background.
+    const root = v_flex().id("tmux-prefix").track_focus(this.handle)
+      .on_key_down((e, cx) => this.key(e, cx));
+    if (!this.all) return root;
+    const rows = BINDINGS;
+    return root.p(14).gap(8).bg(t.popover).text_color(t.foreground).text_size(12)
       .child(h_flex().justify_between().child(div().font_semibold().child(this.repeat ? `Repeat · ${REPEAT_MS} ms` : "Ctrl+B · waiting for a key"))
         .child(div().text_color(t.muted).child("Esc cancel · ^B send prefix")))
       .child(v_flex().h(280).min_h(0).overflow_y_scrollbar().children(rows.map(([key, label, , , repeatable]) =>
         h_flex().h(20).flex_none().items_center().gap(12).child(div().w(40).text_color(t.accent).child(key))
           .child(div().flex_1().child(label)).child(div().text_color(t.dim).child(repeatable ? "repeat" : "")))))
-      .child(div().text_color(t.muted).child("0–9 tabs (0 = 10) · arrows focus · ? all bindings"));
+      .child(div().text_color(t.muted).child("0–9 tabs (0 = 10) · arrows focus · ? hide help"));
   }
 }
