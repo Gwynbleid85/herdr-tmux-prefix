@@ -23,8 +23,8 @@ The app must support frameless overlays (`frame: "none"`). This was validated
 with Herdr app 0.1.16. No additional runtime dependencies are needed.
 
 ```sh
-git clone https://github.com/Gwynbleid85/herdr-layout-examples.git
-cd herdr-layout-examples
+git clone https://github.com/Gwynbleid85/herdr-app-layout-examples.git
+cd herdr-app-layout-examples
 
 # Stop if this folder already exists; back it up before upgrading.
 test ! -e ~/.config/herdr-app/mods/tmux-prefix && \
