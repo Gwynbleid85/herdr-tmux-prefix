@@ -1,13 +1,18 @@
-# Silent tmux prefix for Herdr
+# Tmux prefix with a status indicator for Herdr
 
 Press **Ctrl+B**, release it, then press a command key. Prefix mode waits
-silently: no automatic hint table, background, border or shadow. Press
-**Ctrl+B, then ?** to show the full help table. Press `?` again to hide it
-while keeping prefix mode active; Escape cancels.
+with only a small **`[prefix]`** indicator in the bottom-right corner of the
+Herdr window. The indicator stays visible during repeats and help, and disappears
+when prefix mode ends. There is no automatic hint table or full-window background.
+Press **Ctrl+B, then ?** to show the full help table. Press `?` again to hide
+the table while keeping the indicator and prefix mode active; Escape cancels.
+Clicking outside the help table also cancels prefix mode.
 
 Based on [Herdr's tmux-prefix example](https://github.com/herdrdev/herdr-layout-examples/tree/main/tmux-prefix),
 licensed under [Apache-2.0](../LICENSE). This fork changes hint visibility;
-it is not an official Herdr release or a terminal multiplexer.
+it is not an official Herdr release or a terminal multiplexer. The transparent
+prefix overlay sizes itself from the current window viewport, rather than from
+a fixed screen resolution.
 
 ## Install
 
@@ -105,6 +110,7 @@ herdr-app check "$PWD/tmux-prefix/mods/tmux-prefix"
 
 Unit tests execute the real mod with native Herdr/GPUI boundaries stubbed.
 They do not replace a keyboard/rendering check in Herdr: confirm that
-Ctrl+B is invisible, `?` displays help, `%` splits and Ctrl+B twice forwards.
+Ctrl+B shows `[prefix]` at bottom-right, `?` displays help, `%` splits,
+Escape removes the indicator, and Ctrl+B twice forwards.
 
 The existing `preview.png` shows **help mode**, not what appears on Ctrl+B.

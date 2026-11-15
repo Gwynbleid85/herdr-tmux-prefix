@@ -1,6 +1,6 @@
 # Tmux prefix
 
-Ctrl+B, then a key: tmux-style shortcuts for Herdr tabs, panes and spaces. Prefix mode waits silently; press ? to show the full help table. This is a piece you add to your current layout, not a whole window or a terminal multiplexer.
+Ctrl+B, then a key: tmux-style shortcuts for Herdr tabs, panes and spaces. Prefix mode shows only a small [prefix] indicator at bottom-right; press ? to show the full help table. This is a piece you add to your current layout, not a whole window or a terminal multiplexer.
 
 ![On-demand tmux prefix help (Ctrl+B, then ?)](preview.png)
 
@@ -8,7 +8,7 @@ This file is the brief: enough to build Tmux prefix from an empty folder. The fi
 
 ## What you see
 
-- Nothing visible after Ctrl+B: an empty focusable view in a frameless popup captures the next key.
+- After Ctrl+B, only `[prefix]` is visible, 12px from the right and bottom of the Herdr window. It uses 12px accent text, popup background, 8px horizontal and 4px vertical padding, and 4px rounded corners. A transparent, frameless, viewport-sized root captures the next key. Read `window.viewport_size()` during render and set explicit root width/height; percentage sizing alone collapses in this popup host.
 - After ?, a popup near the top of your window, 520px wide and 420px high, offset 64px from the top. Nothing is added to the layout itself.
 - A heading, "Ctrl+B · waiting for a key", with "Esc cancel · ^B send prefix" on the right. After a repeatable action the heading becomes "Repeat · 500 ms".
 - A scrollable full list, 280px high, with the key on the left, its action in the middle and "repeat" on the right for actions you can repeat. `?` toggles the table's visibility, including arrows and digits.
@@ -17,7 +17,7 @@ This file is the brief: enough to build Tmux prefix from an empty folder. The fi
 
 ## How it behaves
 
-Ctrl+B waits silently without a timeout; ? reveals the full hint table. The next key does this:
+Ctrl+B waits without a timeout, showing the bottom-right indicator; ? reveals the full hint table. The indicator remains visible during help and repeat mode. It disappears with the prefix overlay on dismissal, including Escape, a completed non-repeatable command, the repeat timeout, or an outside click. The next key does this:
 
 | Key | Action |
 | --- | --- |
@@ -40,7 +40,7 @@ An unbound key after the initial prefix just closes the hint. During the repeat 
 
 ## Built from
 
-- **One mod**, `mods/tmux-prefix/`, with `main.js` and `mod.json`. The manifest has `place: "none"` and a top popup overlay with `frame: "none"`, so there is no `layouts/` folder or layout change. Render an empty focusable root until help is requested; only help mode draws its own background and table.
+- **One mod**, `mods/tmux-prefix/`, with `main.js` and `mod.json`. The manifest has `place: "none"` and a top popup overlay with `frame: "none"`, so there is no `layouts/` folder or layout change. Render a transparent viewport-sized focusable root with an absolutely positioned bottom-right indicator; add a centered, 520px-wide help table 64px from the top only when requested. Clicking the transparent root dismisses prefix mode; stop mouse-down propagation inside help so scrolling and table clicks do not dismiss it.
 - **A `keys.json` snippet** with three bindings, merged into the person's existing keys rather than replacing them:
 
   ```json
@@ -69,7 +69,7 @@ An unbound key after the initial prefix just closes the hint. During the repeat 
 ## Done when
 
 - `herdr-app check mods/tmux-prefix` passes with the matching Herdr binary and home.
-- In Herdr, Ctrl+B waits with no visible content, host background, border or shadow, and a long pause does not end prefix mode.
+- In Herdr, Ctrl+B shows only `[prefix]` at bottom-right, with no host background, border or shadow, and a long pause does not end prefix mode. Closing prefix mode removes the indicator.
 - New tab, both splits, tab selection, pane focus, zoom and minimize do what their labels say.
 - J J K repeats move two spaces forward and one back; the hint closes 500ms after the last repeat.
 - `?` reveals the full list, a second `?` hides it, and either stops the repeat timeout. Escape cancels without typing into the terminal.

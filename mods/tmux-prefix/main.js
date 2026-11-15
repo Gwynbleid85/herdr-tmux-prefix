@@ -107,17 +107,28 @@ export default class TmuxPrefix extends View {
 
   render() {
     const t = theme();
-    // Keep keyboard focus while waiting, without drawing a hint or background.
-    const root = v_flex().id("tmux-prefix").track_focus(this.handle)
-      .on_key_down((e, cx) => this.key(e, cx));
+    // A transparent window-sized popup anchors the status to the window corner.
+    // Closing the popup removes the indicator together with prefix mode.
+    const viewport = window.viewport_size();
+    const root = v_flex().id("tmux-prefix").relative()
+      .w(viewport.width).h(viewport.height).items_center()
+      .track_focus(this.handle)
+      .on_key_down((e, cx) => this.key(e, cx))
+      .on_mouse_down("left", () => this.dismiss())
+      .child(div().absolute().right(12).bottom(12)
+        .px(8).py(4).rounded(4).bg(t.popover).text_color(t.accent)
+        .text_size(12).child("[prefix]"));
     if (!this.all) return root;
     const rows = BINDINGS;
-    return root.p(14).gap(8).bg(t.popover).text_color(t.foreground).text_size(12)
+    const help = v_flex().mt(64).w(520).max_w_full().h(420)
+      .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
+      .p(14).gap(8).bg(t.popover).text_color(t.foreground).text_size(12)
       .child(h_flex().justify_between().child(div().font_semibold().child(this.repeat ? `Repeat · ${REPEAT_MS} ms` : "Ctrl+B · waiting for a key"))
         .child(div().text_color(t.muted).child("Esc cancel · ^B send prefix")))
       .child(v_flex().h(280).min_h(0).overflow_y_scrollbar().children(rows.map(([key, label, , , repeatable]) =>
         h_flex().h(20).flex_none().items_center().gap(12).child(div().w(40).text_color(t.accent).child(key))
           .child(div().flex_1().child(label)).child(div().text_color(t.dim).child(repeatable ? "repeat" : "")))))
       .child(div().text_color(t.muted).child("0–9 tabs (0 = 10) · arrows focus · ? hide help"));
+    return root.child(help);
   }
 }
