@@ -1,47 +1,57 @@
-# herdr-tmux-prefix
+# Herdr Tmux Prefix
 
-Tmux-style prefix shortcuts with a status indicator for Herdr app.
+**Tmux-style shortcuts. A quiet footer. Help when you ask for it.**
 
-Press **Ctrl+B**, release it, then press a command key. Prefix mode waits
-with only a small **`[prefix]`** indicator aligned with the footer at the
-bottom-right of the Herdr window. It uses muted gray text with no background,
-border, or badge padding, centered in a 28px footer-height row with a 14px
-right inset. The indicator stays visible during repeats and help, and disappears
-when prefix mode ends. There is no automatic hint table or full-window background.
-Press **Ctrl+B, then ?** to show the full help table. Press `?` again to hide
-the table while keeping the indicator and prefix mode active; Escape cancels.
-Clicking outside the help table also cancels prefix mode.
+[![Herdr mod](https://img.shields.io/badge/Herdr-mod-7c8fa8?style=flat-square)](https://herdr.dev)
+![JavaScript](https://img.shields.io/badge/JavaScript-no_build_step-f7df1e?style=flat-square&logo=javascript&logoColor=black)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square)](LICENSE)
 
-Based on [Herdr's tmux-prefix example](https://github.com/herdrdev/herdr-layout-examples/tree/main/tmux-prefix),
-licensed under [Apache-2.0](LICENSE). This standalone adaptation changes hint
-visibility and preserves the original mod's relevant Git history.
-It is not an official Herdr release or a terminal multiplexer. The transparent
-prefix overlay sizes itself from the current window viewport, rather than from
-a fixed screen resolution.
+Press <kbd>Ctrl</kbd> + <kbd>B</kbd>, release, then press a command key to split panes, move focus or switch tabs. Only a muted gray **`[prefix]`** appears in the footer. Press <kbd>?</kbd> to open the full shortcut table.
 
-## Install
+[Features](#features) · [Installation](#installation) · [Keymap](#keymap) · [Customization](#customization) · [Verification](#verification)
 
-Requires the newer **Herdr app**, its `herdr-app` CLI and herdr-core (`hc`).
-The app must support frameless overlays (`frame: "none"`). This was validated
-with Herdr app 0.1.16. No additional runtime dependencies are needed.
+## Features
+
+- **Prefix-first controls:** splits, pane navigation, tabs, spaces and zoom.
+- **A quiet indicator:** gray text aligned with the bottom-right footer, without a background or badge.
+- **On-demand help:** `Ctrl+B`, then `?` shows the full table; another `?` hides it.
+- **Repeatable navigation:** move between panes or spaces again within 500ms without another prefix.
+- **Existing shortcuts preserved:** no layout changes; Cmd+D and other bindings remain available.
+- **No build step:** uses Herdr app and herdr-core, with no extra runtime packages.
+
+> [!IMPORTANT]
+> Ctrl+B is intercepted from terminal programs, including tmux. Press **Ctrl+B twice** to send a literal Ctrl+B to the focused terminal.
+
+## Installation
+
+### Requirements
+
+- Herdr app and its `herdr-app` CLI.
+- herdr-core (`hc`).
+- Frameless-overlay support (`frame: "none"`). Validated with Herdr app **0.1.16**.
+
+### 1. Copy the mod
 
 ```sh
 git clone https://github.com/Gwynbleid85/herdr-tmux-prefix.git
 cd herdr-tmux-prefix
 
-# Stop if this folder already exists; back it up before upgrading.
+# Stop if a copy is already installed; see the upgrade instructions below.
 test ! -e ~/.config/herdr-app/mods/tmux-prefix && \
   mkdir -p ~/.config/herdr-app/mods && \
   cp -R mods/tmux-prefix ~/.config/herdr-app/mods/
+```
 
-# Back up shortcuts before editing.
+### 2. Merge the shortcuts
+
+Back up your existing shortcuts:
+
+```sh
 cp ~/.config/herdr-app/keys.json \
   ~/.config/herdr-app/keys.json.backup-$(date +%Y%m%d-%H%M%S)
 ```
 
-Merge these entries into `~/.config/herdr-app/keys.json`. **Do not replace
-that file**: preserve existing sections and keys. Resolve any existing
-`ctrl-b` bindings, including those in `layout:<name>` sections, first.
+Add these entries to the corresponding sections of `~/.config/herdr-app/keys.json`. The same snippet is provided in [`keys.json`](keys.json).
 
 ```json
 {
@@ -51,71 +61,86 @@ that file**: preserve existing sections and keys. Resolve any existing
 }
 ```
 
-Validate the installed copy:
+> [!WARNING]
+> **Merge, do not replace the file.** Preserve existing keys and sections. Resolve conflicting `ctrl-b` bindings first, including any in `layout:<name>` sections.
+
+### 3. Validate and try it
 
 ```sh
 herdr-app check ~/.config/herdr-app/mods/tmux-prefix
 ```
 
-No layout changes are needed. Existing shortcuts such as Cmd+D still work.
-If an old prefix popup is open during an upgrade, close it with Escape
-before trying the updated mod.
+Press `Ctrl+B`, then `%` to split right, or `Ctrl+B`, then `?` for help. If an older prefix overlay is open during an upgrade, close it with Escape before trying the new copy.
 
-## Controls
+## Keymap
 
-All keys below follow Ctrl+B:
+All keys below follow **Ctrl+B**:
 
 | Key | Action |
 | --- | --- |
-| `?` | Show/hide the full help table |
+| `?` | Show or hide the full help table |
 | `%` / `"` | Split right / down |
-| `h j k l` or arrows | Focus left / down / up / right |
-| `x` | Close the focused pane and end its terminal |
+| `h` `j` `k` `l` or arrows | Focus left / down / up / right |
+| `x` | Close the focused pane **and end its terminal** |
 | `z` | Toggle pane zoom |
 | `c` | New tab |
 | `n` / `p` | Next / previous tab |
 | `1`–`9`, `0` | Select tab 1–9, 10 |
 | `J` / `K` | Next / previous space |
-| `d` | Minimize the window, not tmux detach |
-| Escape | Cancel |
-| Ctrl+B | Send a literal Ctrl+B to the focused terminal |
+| `d` | Minimize the window; this is **not** tmux detach |
+| Escape | Cancel prefix mode |
+| Ctrl+B | Send a literal Ctrl+B to the terminal |
 
-The first command has no timeout. Pane focus and space navigation allow
-repeats for 500ms after each action, without another prefix. `?` cancels
-the repeat timeout. Help stays visible until hidden or prefix mode ends.
+### Waiting, repeats and cancellation
 
-Ctrl+B is intercepted from terminal programs, including tmux; press it
-twice to send it through. Unbound keys initially dismiss prefix mode.
-During repeats, supported simple keys are forwarded to the terminal;
-shifted punctuation, Unicode and modified shortcuts are not replayed.
+The first command has **no timeout**. The footer indicator remains visible while prefix mode is active, including during help and repeats, and disappears when prefix mode ends.
 
-The mod invokes Herdr's `hc` executable to forward literal keys. It makes
-no network requests and reads no external files. Customize `BINDINGS` and
-`REPEAT_MS` in `mods/tmux-prefix/main.js`.
+Pane focus and space navigation allow repeats for **500ms** after each action. For example, `Ctrl+B`, `J`, `J`, `K` moves two spaces forward and one back. Pressing `?` cancels the repeat timeout and leaves prefix mode waiting.
 
-## Upgrade or remove
+Escape or a click outside the help table cancels prefix mode. An unbound key initially dismisses it without typing. During repeats, supported simple keys are forwarded to the terminal; shifted punctuation, Unicode and modified shortcuts are not replayed.
 
-Before upgrading, copy the installed `mods/tmux-prefix` folder to a dated
-backup outside `mods/`, then replace only `main.js` and `mod.json` with the
-repository's files. Keep your existing `keys.json` and validate again.
+<details>
+<summary>Help-table preview</summary>
 
-To uninstall, close prefix mode, remove its three key entries (or restore
-your prior Ctrl+B bindings), and remove `mods/tmux-prefix`. Restore your
-backed-up folder to return to the upstream behavior. Restore the whole
-keys backup only if you have made no later shortcut edits.
+![Example of the on-demand shortcut table](preview.png)
 
-## Verify
+This image comes from the upstream example and shows the help table, not the current footer styling. The full table appears only when requested with `?`.
 
-From the repository root, using Node's built-in test runner:
+</details>
+
+## Customization
+
+Edit [`mods/tmux-prefix/main.js`](mods/tmux-prefix/main.js):
+
+| Setting | Purpose |
+| --- | --- |
+| `BINDINGS` | Command keys, labels, arguments and repeat behavior |
+| `REPEAT_MS` | Navigation repeat window, currently 500ms |
+| Indicator rendering | Muted theme color, 11.8px text, 28px footer-height row and 14px right inset |
+
+The transparent overlay uses the current window viewport rather than a fixed screen resolution. The mod invokes `hc` to forward literal keys; it makes no network requests and reads no external files.
+
+## Verification
+
+From this repository, run the tests with Node's built-in test runner:
 
 ```sh
-node --test tests/prefix.test.cjs
+node --test
 herdr-app check "$PWD/mods/tmux-prefix"
 ```
 
-Unit tests execute the real mod with native Herdr/GPUI boundaries stubbed.
-They do not replace a keyboard/rendering check in Herdr: confirm that
-Ctrl+B shows `[prefix]` at bottom-right, `?` displays help, `%` splits,
-Escape removes the indicator, and Ctrl+B twice forwards.
+Tests execute the actual mod with native Herdr/GPUI boundaries stubbed. Also check it in Herdr: the footer indicator appears after Ctrl+B, `?` opens help, `%` splits, Escape clears the indicator, and Ctrl+B twice forwards the prefix.
 
-The existing `preview.png` shows **help mode**, not what appears on Ctrl+B.
+## Upgrade or remove
+
+**Upgrade:** back up the installed mod folder outside `mods/`, replace `main.js` and `mod.json` with this repository's files, and validate again. Keep your existing `keys.json`.
+
+**Uninstall:** close prefix mode, remove the three shortcut entries or restore your previous Ctrl+B bindings, then remove `~/.config/herdr-app/mods/tmux-prefix`.
+
+Restore a whole keys-file backup only if you have made no later shortcut edits.
+
+## Attribution and license
+
+Adapted from [Herdr's tmux-prefix example](https://github.com/herdrdev/herdr-layout-examples/tree/main/tmux-prefix). The original mod's relevant Git history is preserved. This is an unofficial customization, not a terminal multiplexer.
+
+Licensed under [Apache-2.0](LICENSE). See [`RECIPE.md`](RECIPE.md) for the behavior and implementation brief.
